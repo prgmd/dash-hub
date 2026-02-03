@@ -1,1 +1,5 @@
-print('SK' if int(input)//2 == 1 else 'CY')
+n = int(input())
+if n%2 == 1:
+    print('SK')
+else:
+    print('CY')
