@@ -25,7 +25,7 @@ for item in range(1, len(items)):
 
     while q:
         now, left_length = q.pop()
-        if left_length <= 0:
+        if left_length < 0:
             continue
 
         for nxt, length in graph[now]:
