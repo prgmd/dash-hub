@@ -1,39 +1,37 @@
 from collections import defaultdict
-from collections import deque
+import heapq
 
 n, m, r = map(int, input().split())
-
 items = [0] + list(map(int, input().split()))
-
 graph = defaultdict(list)
-for _ in range(r):
-    a, b, l = map(int, input().split())
-    graph[a].append((b, l))
-    graph[b].append((a, l))
-
 answer = 0
 
+for _ in range(r):
+    a, b, l = map(int, input().split())
+    graph[a].append((l, b))
+    graph[b].append((l, a))
+
 for item in range(1, len(items)):
-
-    q = deque()
-    q.append((item, m)) # 현재 위치와 남은 반경 입력
-
-    visited = set()
-    visited.add(item)
-
-    item_total = items[item]
-
+    dist = [int(1e9)] * (n + 1)
+    dist[item] = 0
+    
+    q = [(m, item)]
     while q:
-        now, left_length = q.popleft()
-        if left_length < 0:
+        left_dist, now = heapq.heappop(q)
+        
+        if left_dist < 0:
             continue
 
-        for nxt, length in graph[now]:
-            if length <= left_length and nxt not in visited:
-                item_total += items[nxt]
-                q.append((nxt, left_length-length))
-                visited.add(nxt)
-    
+        for nxt_dist, nxt in graph[now]:
+            if nxt_dist <= left_dist:
+                heapq.heappush(q, (left_dist-nxt_dist, nxt))
+                dist[nxt] = min(dist[nxt], left_dist-nxt_dist)
+        
     # answer와 값 비교
+    item_total = 0
+    for idx, d in enumerate(dist):
+        if d <= m:
+            item_total += items[idx]
     answer = max(item_total, answer)
+    
 print(answer)
