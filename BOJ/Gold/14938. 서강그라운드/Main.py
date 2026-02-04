@@ -24,7 +24,7 @@ for item in range(1, len(items)):
     item_total = items[item]
 
     while q:
-        now, left_length = q.pop()
+        now, left_length = q.popleft()
         if left_length < 0:
             continue
 
