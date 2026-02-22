@@ -6,7 +6,7 @@ def check_repeat(stack):
         if stack[-i:] == stack[-2*i:-i]:
             return True
         else:
-            i *= 2
+            i += 1
     return False
 
 def bt(n, stack):
