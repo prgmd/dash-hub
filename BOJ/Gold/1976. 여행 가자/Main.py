@@ -26,8 +26,10 @@ for i, g in enumerate(graph):
             union(i, j)
 
 ans = 'YES'
-for i in range(m-1):
-    if parent[route[i]-1] != parent[route[i+1]-1]:
+root = find(route[0]-1)
+for i in range(1, m):
+    if find(route[i]-1) != root:
         ans = 'NO'
+        break
 
 print(ans)
