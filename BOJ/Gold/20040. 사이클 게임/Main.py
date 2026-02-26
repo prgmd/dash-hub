@@ -28,5 +28,6 @@ for i in range(m):
     a, b = map(int, input().split())
     if union(a, b):
         ans = i+1
+        break
 
 print(ans)
