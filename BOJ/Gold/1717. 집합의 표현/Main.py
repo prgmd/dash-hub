@@ -5,10 +5,9 @@ n, m = map(int, input().split())
 parent = [i for i in range(n+1)]
 
 def find(x):
-    p = parent[x]
-    if p != x:
-        p = find(p)
-    return p
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
 
 def union(a, b):
     n = find(a)
