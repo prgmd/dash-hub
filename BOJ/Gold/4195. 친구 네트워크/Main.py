@@ -1,5 +1,5 @@
 import sys
-input = sys.stdin.readline
+input = lambda: sys.stdin.readline().rstrip()
 t = int(input())
 
 def find(x):
