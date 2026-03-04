@@ -1,1 +1,1 @@
-print(ord(int(input())))
+print(ord(input()))
