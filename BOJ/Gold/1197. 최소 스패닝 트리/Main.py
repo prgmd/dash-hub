@@ -5,6 +5,7 @@ v, e = map(int, input().split())
 parent = [i for i in range(v+1)]
 
 def get_parent(x):
+    curr = x
     while parent[curr] != curr:
         curr = parent[curr]
     while parent[x] != curr:
