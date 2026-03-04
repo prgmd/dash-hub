@@ -1,14 +1,17 @@
 import sys
 input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
 
 v, e = map(int, input().split())
 parent = [i for i in range(v+1)]
 
 def get_parent(x):
-    if parent[x] != x:
-        parent[x] = get_parent(parent[x])
-    return parent[x]
+    while parent[curr] != curr:
+        curr = parent[curr]
+    while parent[x] != curr:
+        nxt = parent[x]
+        parent[x] = curr
+        x = nxt
+    return curr
 
 def union_find(a, b):
     a = get_parent(a)
