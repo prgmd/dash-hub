@@ -1,36 +1,36 @@
 import sys
 input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
 
-def solve():
-    n = int(input())
-    rgb = [list(map(int, input().split())) for _ in range(n)]
-    ans = int(1e9)
-    start = 3
+n = int(input())
+rgb = [list(map(int, input().split())) for _ in range(n)]
+dp = [[int(1e9)] * 3 for _ in range(n)]
+ans = int(1e9)
 
-    def bt(row, prev, total):
-        nonlocal ans, start
+def fill_dp(start):
+    global ans
+    
+    if start == 0:
+        dp[0] = [rgb[0][0], int(1e9), int(1e9)]
+    elif start == 1:
+        dp[0] = [int(1e9), rgb[0][1], int(1e9)]
+    else:
+        dp[0] = [int(1e9), int(1e9), rgb[0][2]]
+    
+    for y in range(1, n):
+        if y == n-1:
+            if start != 0:
+                dp[y][0] = rgb[y][0] + min(dp[y-1][1], dp[y-1][2])
+            if start != 1:
+                dp[y][1] = rgb[y][1] + min(dp[y-1][0], dp[y-1][2])
+            if start != 2:
+                dp[y][2] = rgb[y][2] + min(dp[y-1][0], dp[y-1][1])
+            ans = min(ans, min(dp[-1]))
+        else:
+            dp[y][0] = rgb[y][0] + min(dp[y-1][1], dp[y-1][2])
+            dp[y][1] = rgb[y][1] + min(dp[y-1][0], dp[y-1][2])
+            dp[y][2] = rgb[y][2] + min(dp[y-1][0], dp[y-1][1])
 
-        if ans <= total:
-            return
+for x in range(3):
+    fill_dp(x)
 
-        if row == n:
-            if prev != start:
-                ans = min(ans, total)
-            return
-
-        for x in range(3):
-            if x != prev:
-                total += rgb[row][x]
-                row += 1
-                bt(row, x, total)
-                row -= 1
-                total -= rgb[row][x]
-
-    for x in range(3):
-        start = x
-        bt(1, x, rgb[0][x])
-
-    print(ans)
-
-solve()
+print(ans)
