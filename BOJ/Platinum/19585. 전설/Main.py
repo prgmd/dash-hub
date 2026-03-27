@@ -14,29 +14,36 @@ def insert(word, trie, type):
 
 def search(word):
     node = color_trie
-    for char in word:
+    for idx, char in enumerate(word):
         if char not in node:
             if '.' in node and char in nick_trie:
                 node = nick_trie[char]
             else:
                 return False
         else:
+            if '.' in node:
+                if nick_search(word[idx-1:]):
+                    return True
             node = node[char]
+    return '#' in node
+
+def nick_search(word):
+    node = nick_trie
+    for char in word:
+        if char not in node:
+            return False
+        node = node[char]
     return '#' in node
 
 def solve():
     c, n = map(int, input().split())
-    colors = [input() for _ in range(c)]
-    nicknames = [input() for _ in range(n)]
-    teams = [input() for _ in range(int(input()))]
+    for _ in range(c):
+        insert(input(), color_trie, '.')
 
-    for color in colors:
-        insert(color, color_trie, '.')
-    
-    for nick in nicknames:
-        insert(nick, nick_trie, '#')
-    
-    for team in teams:
-        print('Yes' if search(team) else 'No')
+    for _ in range(n):
+        insert(input(), nick_trie, '#')
+
+    for _ in range(int(input())):    
+        print('Yes' if search(input()) else 'No')
 
 solve()
