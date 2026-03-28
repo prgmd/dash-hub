@@ -1,33 +1,39 @@
 import sys
 import heapq
-n, m, x = map(int, input().split())
 input = sys.stdin.readline
 
+n, m, x = map(int, input().split())
 roads = [[] for _ in range(n+1)]
+rev_roads = [[] for _ in range(n+1)]
+
 for _ in range(m):
     start, end, time = map(int, input().split())
-    heapq.heappush(roads[start], (time, end))
+    roads[start].append((time, end))
+    rev_roads[end].append((time, start))
 
-costs = [[1e9] * (n+1) for _ in range(n)]
-ans = [0] * (n+1)
+def dijkstra(start, graph):
+    cost = [1e9] * (n+1)
+    cost[start] = 0
+    q = [(0, start)]
 
-for i in range(1, n+1):
-    row = costs[i-1]
-    row[i] = 0
-
-    q = [i]
     while q:
-        now = heapq.heappop(q)
-        for dist, nxt in roads[now]:
-            if row[nxt] > row[now] + dist:
-                row[nxt] = row[now] + dist
-                if nxt == x:
-                    continue
-                heapq.heappush(q, nxt)
+        dist, now = heapq.heappop(q)
+        if cost[now] < dist:
+            continue
+
+        for weight, nxt in graph[now]:
+            if cost[nxt] > dist + weight:
+                cost[nxt] = dist + weight
+                heapq.heappush(q, (cost[nxt], nxt))
+    
+    return cost
+
+go_party = dijkstra(x, roads)
+go_home = dijkstra(x, rev_roads)
+ans = 0
 
 for i in range(1, n+1):
     if i == x:
         continue
-    costs[x-1][i] += costs[i-1][x]
-
-print(max(costs[x-1][1:]))
+    ans = max(ans, go_party[i] + go_home[i])
+print(ans)
